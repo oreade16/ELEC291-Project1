@@ -12,6 +12,7 @@ y:   ds 4
 z:   ds 4
 bcd: ds 5
 seed: ds 4
+rand: ds 16
 
 BSEG
 mf: dbit 1
@@ -33,6 +34,8 @@ LCD_D7 equ P3.7
 $NOLIST
 $include(LCD_4bit_MS.inc) ; A library of LCD related functions and utility macros
 $LIST
+
+
 
 ;                     1234567890123456    <- This helps determine the location of the counter
 Initial_Message:  db 'Random Number ', 0
@@ -74,6 +77,7 @@ MyProgram:
 
 	Set_Cursor(1, 1)
     Send_Constant_String(#Initial_Message)
+    mov r7,#0x00
     
 forever:
     ; synchronize with rising edge of the signal applied to pin P0.0
@@ -110,13 +114,9 @@ measure2:
 fail4: ljmp no_signal	
 skip4: jnb P0.0, measure2
     clr TR2 ; Stop timer 2, [TH2,TL2] * 542.5347ns is the period
- 
-    mov Seed+0, TH2
-    mov Seed+1, #0x01
-    mov Seed+2, #0x50
-    mov Seed+2, TL2
-    
 
+
+rng:
 	; Using integer math, convert the period to frequency:
 	mov x+0, Seed+0
 	mov x+1, Seed+1
@@ -135,7 +135,7 @@ skip4: jnb P0.0, measure2
 	mov Seed+2,x+2
 	mov Seed+3,x+3
 	
-	Load_y(105)
+	Load_y(88); This number is variable. It can be used to generate different numbers in the array. 
 	lcall div32
 	mov x+3,#0x00
 	mov x+2,#0x00
@@ -144,33 +144,89 @@ skip4: jnb P0.0, measure2
 	mov b,#0x04
 	div ab
 	mov x+0,b
-	
-	
-	
+	;Set the cursor to display the digits
+	;Set_Cursor(2, 1)
+	;lcall hex2bcd
+	;lcall Display_10_digit_BCD
+	cjne r7,#0x00,not0
+	mov rand+0,x+0
+	;Set_Cursor(2, 1)
+	;Display_BCD(rand+0)
+	ljmp addreg
+not0:
+    cjne r7,#0x01,not1
+	mov rand+1,x+0
+	;Set_Cursor(2, 1)
+	;Display_BCD(rand+1)
+	ljmp addreg
+not1:
+ cjne r7,#0x02,not2
+	mov rand+2,x+0
+	ljmp addreg
+not2:
+ cjne r7,#0x03,not3
+	mov rand+3,x+0
+	ljmp addreg
+not3:
+ cjne r7,#0x04,not4
+	mov rand+4,x+0
+	ljmp addreg
+not4:
+ cjne r7,#0x05,not5
+	mov rand+5,x+0
+	ljmp addreg
+not5:
+ cjne r7,#0x06,not6
+	mov rand+6,x+0
+	ljmp addreg
+not6:
+ cjne r7,#0x07,not7
+	mov rand+7,x+0
+	ljmp addreg
+not7:
+ cjne r7,#0x08,not8
+	mov rand+8,x+0
+	ljmp addreg
+not8:
+ cjne r7,#0x09,not9
+	mov rand+9,x+0
+	ljmp addreg
+not9:
+ cjne r7,#0x0a,nota
+	mov rand+10,x+0
+	ljmp addreg
+nota:
+ cjne r7,#0x0b,notb
+	mov rand+11,x+0
+	ljmp addreg
+notb:
+ cjne r7,#0x0c,notc
+	mov rand+12,x+0
+	ljmp addreg
+notc:
+ cjne r7,#0x0d,notd
+	mov rand+13,x+0
+	ljmp addreg
+notd:
+ cjne r7,#0x0e,note
+	mov rand+14,x+0
+	ljmp addreg
+note:	
 
-
-	
-
-	
-	
-
-	; Convert from ns to Hz
-	;lcall copy_xy
-	;Load_x(1000000000)
-	;lcall div32
-	
-
-
-	
-	; Convert the result to BCD and display on LCD
-	Set_Cursor(2, 1)
-	lcall hex2bcd
-	lcall Display_10_digit_BCD
-    ljmp forever ; Repeat! 
+addreg:	
+	mov a,r7
+	add a, #0x01
+	mov r7,a	
+	cjne r7, #0x0f,repeat
+	ljmp finito
+repeat:    ljmp forever ; Repeat! 
     
 no_signal:	
 	Set_Cursor(2, 1)
     Send_Constant_String(#No_Signal_Str)
-    ljmp forever ; Repeat! 
+    ljmp forever ; Repeat!             
+    
+finito:
+WriteCommand(#0x01)
 
 end
