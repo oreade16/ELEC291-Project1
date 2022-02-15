@@ -150,66 +150,92 @@ rng:
 	;lcall Display_10_digit_BCD
 	cjne r7,#0x00,not0
 	mov rand+0,x+0
-	;Set_Cursor(2, 1)
-	;Display_BCD(rand+0)
+	Set_Cursor(2, 1)
+	Display_BCD(rand+0)
 	ljmp addreg
 not0:
     cjne r7,#0x01,not1
 	mov rand+1,x+0
-	;Set_Cursor(2, 1)
-	;Display_BCD(rand+1)
+	Set_Cursor(2, 1)
+	Display_BCD(rand+1)
 	ljmp addreg
 not1:
  cjne r7,#0x02,not2
 	mov rand+2,x+0
+	Set_Cursor(2, 1)
+	Display_BCD(rand+2)
 	ljmp addreg
 not2:
  cjne r7,#0x03,not3
 	mov rand+3,x+0
+	Set_Cursor(2, 1)
+	Display_BCD(rand+3)
 	ljmp addreg
 not3:
  cjne r7,#0x04,not4
 	mov rand+4,x+0
+	Set_Cursor(2, 1)
+	Display_BCD(rand+4)
 	ljmp addreg
 not4:
  cjne r7,#0x05,not5
 	mov rand+5,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+5)
 	ljmp addreg
 not5:
  cjne r7,#0x06,not6
 	mov rand+6,x+0
+	Set_Cursor(2, 1)
+	Display_BCD(rand+6)
 	ljmp addreg
 not6:
  cjne r7,#0x07,not7
 	mov rand+7,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+7)
 	ljmp addreg
 not7:
  cjne r7,#0x08,not8
 	mov rand+8,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+8)
 	ljmp addreg
 not8:
  cjne r7,#0x09,not9
 	mov rand+9,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+9)
 	ljmp addreg
 not9:
  cjne r7,#0x0a,nota
 	mov rand+10,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+10)
 	ljmp addreg
 nota:
  cjne r7,#0x0b,notb
 	mov rand+11,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+11)
 	ljmp addreg
 notb:
  cjne r7,#0x0c,notc
 	mov rand+12,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+12)
 	ljmp addreg
 notc:
  cjne r7,#0x0d,notd
 	mov rand+13,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+1)
 	ljmp addreg
 notd:
  cjne r7,#0x0e,note
 	mov rand+14,x+0
+		Set_Cursor(2, 1)
+	Display_BCD(rand+1)
 	ljmp addreg
 note:	
 
